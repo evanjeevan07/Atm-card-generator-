@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Advanced Credit Card Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- html2canvas library for downloading the image -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    body {
+      background-color: #111827; /* Dark Gray */
+      color: #e5e7eb;
+    }
+    .teko { font-family: 'Teko', sans-serif; }
+
+    /* --- All Card Background Styles --- */
+    /* Style 1: Aurora */
+    .aurora-bg {
+      background-color: #111;
+      position: relative;
+    }
+    .aurora-bg .blob1 { position: absolute; top: -4rem; left: -4rem; width: 12rem; height: 12rem; background-color: #581c87; border-radius: 9999px; filter: blur(60px); opacity: 0.4; z-index: 0; }
+    .aurora-bg .blob2 { position: absolute; bottom: -5rem; right: -2.5rem; width: 10rem; height: 10rem; background-color: #1d4ed8; border-radius: 9999px; filter: blur(60px); opacity: 0.5; z-index: 0; }
+    .aurora-bg .blob3 { position: absolute; bottom: -2rem; left: -1rem; width: 7rem; height: 7rem; background-color: #9f1239; border-radius: 9999px; filter: blur(48px); opacity: 0.3; z-index: 0; }
+
+    /* Style 2: Geometric Shards */
+    .geometric-shards-bg-landscape {
+      background-image: url("data:image/svg+xml,%3csvg width='340' height='200' viewBox='0 0 340 200' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='340' height='200' fill='%23111'/%3e%3cpath d='M340 0 L220 0 L340 150 Z' fill='%23222'/%3e%3cpath d='M220 0 L180 0 L280 200 L340 200 Z' fill='%231a1a1a'/%3e%3cpath d='M180 0 L150 0 L200 200 L280 200 Z' fill='%23282828'/%3e%3cpath d='M150 0 L0 0 L0 50 L120 0 Z' fill='%23181818'/%3e%3cpath d='M0 50 L0 200 L200 200 Z' fill='%23222'/%3e%3cpath d='M0 80 L100 200 L0 200 Z' fill='%23333'/%3e%3c/svg%3e");
+    }
+    .geometric-shards-bg-portrait {
+      background-image: url("data:image/svg+xml,%3csvg width='200' height='340' viewBox='0 0 200 340' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='200' height='340' fill='%23111'/%3e%3cpath d='M200 0 L80 0 L200 250 Z' fill='%23222'/%3e%3cpath d='M80 0 L0 0 L0 150 Z' fill='%231a1a1a'/%3e%3cpath d='M0 150 L0 340 L120 340 Z' fill='%23282828'/%3e%3cpath d='M200 340 L120 340 L200 220 Z' fill='%23181818'/%3e%3cpath d='M80 0 L160 340 L120 340 Z' fill='%23333'/%3e%3c/svg%3e");
+    }
+
+    /* Style 3: Tech Circuit */
+    .circuit-board-bg-landscape {
+      opacity: 0.7;
+      background-image: url("data:image/svg+xml,%3csvg width='340' height='200' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='%23111'/%3e%3cdefs%3e%3cstyle%3e.line%7bstroke:%23333;stroke-width:1;fill:none;%7d.dot%7bfill:%23333;%7d%3c/style%3e%3c/defs%3e%3cpath class='line' d='M0 40 H50 V60 H80 V20 H120'/%3e%3cpath class='line' d='M340 180 H280 V160 H250 V190 H220'/%3e%3cpath class='line' d='M150 0 V30 H180 V60 H200 V90'/%3e%3cpath class='line' d='M0 150 H30 V120 H60'/%3e%3cpath class='line' d='M340 50 H300 V80 H270'/%3e%3ccircle class='dot' cx='50' cy='40' r='2'/%3e%3ccircle class='dot' cx='80' cy='60' r='2'/%3e%3ccircle class='dot' cx='280' cy='180' r='2'/%3e%3ccircle class='dot' cx='250' cy='160' r='2'/%3e%3ccircle class='dot' cx='180' cy='30' r='2'/%3e%3ccircle class='dot' cx='200' cy='60' r='2'/%3e%3ccircle class='dot' cx='300' cy='50' r='2'/%3e%3c/svg%3e");
+    }
+    .circuit-board-bg-portrait {
+      opacity: 0.6;
+      background-image: url("data:image/svg+xml,%3csvg width='200' height='340' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='%23111'/%3e%3cdefs%3e%3cstyle%3e.line%7bstroke:%23333;stroke-width:1.5;fill:none;%7d.dot%7bfill:%23333;%7d%3c/style%3e%3c/defs%3e%3cpath class='line' d='M20 0 V 80 H 70 V 120'/%3e%3cpath class='line' d='M0 180 H 50 V 250 H 100 V 340'/%3e%3cpath class='line' d='M200 40 H 150 V 90 H 120 V 150'/%3e%3cpath class='line' d='M200 280 H 160 V 220'/%3e%3cpath class='line' d='M80 340 V 280 H 40'/%3e%3ccircle class='dot' cx='20' cy='80' r='3'/%3e%3ccircle class='dot' cx='70' cy='80' r='3'/%3e%3ccircle class='dot' cx='50' cy='250' r='3'/%3e%3ccircle class='dot' cx='150' cy='90' r='3'/%3e%3ccircle class='dot' cx='160' cy='280' r='3'/%3e%3c/svg%3e");
+    }
+  </style>
+</head>
+<body class="text-white">
+
+  <div class="container mx-auto p-4 lg:p-8">
+    <header class="text-center mb-8">
+      <h1 class="text-3xl md:text-4xl font-bold text-white">Advanced Card Generator</h1>
+      <p class="text-gray-400 mt-2">Customize your credit card</p>
+    </header>
+
+    <!-- Controls Section -->
+    <div class="bg-gray-800 p-6 rounded-lg mb-8 max-w-4xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Text Inputs -->
+        <div>
+          <label for="name-input" class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+          <input type="text" id="name-input" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="EV SANJEEVAN">
+        </div>
+        <div>
+          <label for="number-input" class="block text-sm font-medium text-gray-300 mb-1">Card Number</label>
+          <input type="text" id="number-input" maxlength="19" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="•••• •••• •••• 8000">
+        </div>
+        <div>
+          <label for="expiry-input" class="block text-sm font-medium text-gray-300 mb-1">Expiry Date</label>
+          <input type="text" id="expiry-input" maxlength="5" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="MM/YY">
+        </div>
+        <div>
+          <label for="bank-select" class="block text-sm font-medium text-gray-300 mb-1">Bank</label>
+          <select id="bank-select" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+            <option value="hdfc">HDFC Bank</option>
+            <option value="icici">ICICI Bank</option>
+            <option value="axis">Axis Bank</option>
+            <option value="sbi">SBI Bank</option>
+            <option value="union">Union Bank</option>
+          </select>
+        </div>
+        <!-- Dropdowns & Radios -->
+        <div>
+          <label for="style-select" class="block text-sm font-medium text-gray-300 mb-1">Card Style</label>
+          <select id="style-select" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+            <option value="aurora">Aurora</option>
+            <option value="geometric">Geometric Shards</option>
+            <option value="circuit">Tech Circuit</option>
+          </select>
+        </div>
+        <div class="lg:col-span-2">
+            <label class="block text-sm font-medium text-gray-300 mb-1">Card Provider</label>
+            <div class="flex items-center space-x-4 p-2 rounded-md bg-gray-700 border border-gray-600">
+              <label class="flex-1 text-center"><input type="radio" name="provider" value="rupay" checked class="form-radio bg-gray-700 text-blue-500"> RuPay</label>
+              <label class="flex-1 text-center"><input type="radio" name="provider" value="visa" class="form-radio bg-gray-700 text-blue-500"> Visa</label>
+              <label class="flex-1 text-center"><input type="radio" name="provider" value="mastercard" class="form-radio bg-gray-700 text-blue-500"> MasterCard</label>
+            </div>
+        </div>
+         <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Layout</label>
+            <div class="flex items-center space-x-4 p-2 rounded-md bg-gray-700 border border-gray-600">
+              <label class="flex-1 text-center"><input type="radio" name="orientation" value="landscape" checked class="form-radio bg-gray-700 text-blue-500"> Landscape</label>
+              <label class="flex-1 text-center"><input type="radio" name="orientation" value="portrait" class="form-radio bg-gray-700 text-blue-500"> Portrait</label>
+            </div>
+        </div>
+        <!-- Download Button -->
+        <div class="md:col-span-2 lg:col-span-4">
+            <button id="download-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors">
+                Download Card
+            </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Display Section -->
+    <div id="card-display-area" class="min-h-[400px] flex items-center justify-center p-4">
+      <!-- The generated card will be injected here by JavaScript -->
+    </div>
+
+    <!-- Permanent Warning Box -->
+    <div class="max-w-4xl mx-auto mt-8 p-4 bg-yellow-900/20 border border-yellow-700/50 rounded-lg flex items-center space-x-4">
+        <!-- SVG Warning Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-yellow-400 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.03-1.742 3.03H4.42c-1.532 0-2.492-1.696-1.742-3.03l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+        </svg>
+        <div>
+            <h3 class="font-bold text-yellow-200">Warning</h3>
+            <p class="text-sm text-yellow-300/90 mt-1">
+                This tool is for design and entertainment purposes only. The generated cards are not real and should not be used for any financial transactions.
+            </p>
+        </div>
+    </div>
+
+  </div>
+
+<script>
+  // --- DATA STORE ---
+  const bankData = {
+    hdfc: { logo: 'https://uploads.onecompiler.io/3zky9aw9p/43rfjn46r/i73iutn2jbmk2llmshek1paupq.png', name: 'HDFC Bank Ltd' },
+    icici: { logo: 'https://uploads.onecompiler.io/3zky9aw9p/43rgnzrqy/pngwing.com%20-%202025-07-23T083649.527.png', name: 'ICICI Bank' },
+    axis: { logo: 'https://uploads.onecompiler.io/3zky9aw9p/43rgnzrqy/pngwing.com%20-%202025-07-23T083432.427.png', name: 'Axis Bank' },
+    sbi: { logo: 'https://uploads.onecompiler.io/3zky9aw9p/43rgnzrqy/pngwing.com%20-%202025-07-23T083523.339.png', name: 'SBI' },
+    union: { logo: 'https://uploads.onecompiler.io/3zky9aw9p/43rgnzrqy/pngwing.com%20-%202025-07-23T083827.891.png', name: 'Union Bank' },
+  };
+
+  const providerData = {
+    rupay: 'https://uploads.onecompiler.io/3zky9aw9p/43rfjn46r/pngwing.com%20-%202025-07-23T072603.886.png',
+    visa: 'https://uploads.onecompiler.io/3zky9aw9p/43rgnzrqy/pngwing.com%20-%202025-07-23T084004.198.png',
+    mastercard: 'https://uploads.onecompiler.io/3zky9aw9p/43rgnzrqy/pngwing.com%20-%202025-07-23T083901.169.png',
+  };
+
+  // --- HTML TEMPLATES FOR EACH CARD DESIGN (WITH UPDATED LANDSCAPE) ---
+  const landscapeTemplate = `
+    <div class="flex items-center space-x-3 px-5 pt-5 relative z-10">
+        <img data-id="bank-logo" src="" alt="Bank" class="h-6 object-contain" />
+        <span data-id="bank-name" class="font-semibold text-sm truncate"></span>
+    </div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[30%] text-center z-10">
+        <h1 data-id="card-name" class="teko text-white text-xl font-bold"></h1>
+        <p data-id="card-expiry" class="text-white text-sm opacity-80 tracking-widest"></p>
+    </div>
+    <div data-id="card-number" class="absolute bottom-3 left-5 text-[15px] font-bold tracking-wider z-10"></div>
+    <div class="absolute bottom-4 right-5 z-10">
+        <img data-id="provider-logo" src="" alt="Provider" class="h-5 object-contain" />
+    </div>`;
+  
+  const cardTemplates = {
+    aurora: {
+      landscape: `
+        <div class="relative w-[340px] h-[200px] rounded-2xl bg-[#111] overflow-hidden text-white shadow-2xl">
+          <div class="aurora-bg absolute inset-0"><div class="blob1"></div><div class="blob2"></div><div class="blob3"></div></div>
+          ${landscapeTemplate}
+        </div>`,
+      portrait: `
+        <div class="relative w-[200px] h-[340px] rounded-2xl bg-[#111] overflow-hidden text-white shadow-2xl">
+          <div class="aurora-bg absolute inset-0"><div class="blob1"></div><div class="blob2"></div><div class="blob3"></div></div>
+          <div class="flex items-center space-x-3 px-5 pt-5 relative z-10">
+            <img data-id="bank-logo" src="" alt="Bank" class="h-6 object-contain" />
+            <span data-id="bank-name" class="font-semibold text-sm truncate"></span>
+          </div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-10">
+            <h1 data-id="card-name" class="teko text-white text-2xl font-bold"></h1>
+            <p data-id="card-expiry" class="text-white text-sm opacity-80 tracking-widest"></p>
+          </div>
+          <div data-id="card-number" class="absolute bottom-4 left-5 text-[10px] font-bold tracking-wider"></div>
+          <div class="absolute bottom-4 right-5 z-10">
+            <img data-id="provider-logo" src="" alt="Provider" class="h-5 object-contain" />
+          </div>
+        </div>`
+    },
+    geometric: {
+        landscape: `
+        <div class="relative w-[340px] h-[200px] rounded-2xl bg-[#111] overflow-hidden text-white shadow-2xl">
+          <div class="absolute inset-0 geometric-shards-bg-landscape z-0"></div>
+          ${landscapeTemplate}
+        </div>`,
+      portrait: `
+        <div class="relative w-[200px] h-[340px] rounded-2xl bg-[#111] overflow-hidden text-white shadow-2xl">
+          <div class="absolute inset-0 geometric-shards-bg-portrait z-0"></div>
+          <div class="flex items-center space-x-3 px-5 pt-5 relative z-10">
+            <img data-id="bank-logo" src="" alt="Bank" class="h-6 object-contain" />
+            <span data-id="bank-name" class="font-semibold text-sm truncate"></span>
+          </div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-10">
+            <h1 data-id="card-name" class="teko text-white text-2xl font-bold"></h1>
+            <p data-id="card-expiry" class="text-white text-sm opacity-80 tracking-widest"></p>
+          </div>
+          <div data-id="card-number" class="absolute bottom-5 left-5 text-[9px] font-bold tracking-wider z-10"></div>
+          <div class="absolute bottom-4 right-5 z-10">
+            <img data-id="provider-logo" src="" alt="Provider" class="h-5 object-contain" />
+          </div>
+        </div>`
+    },
+    circuit: {
+        landscape: `
+        <div class="relative w-[340px] h-[200px] rounded-2xl bg-[#111] overflow-hidden text-white shadow-2xl">
+            <div class="absolute inset-0 circuit-board-bg-landscape z-0"></div>
+            ${landscapeTemplate}
+        </div>`,
+      portrait: `
+        <div class="relative w-[200px] h-[340px] rounded-2xl bg-[#111] overflow-hidden text-white shadow-2xl">
+            <div class="absolute inset-0 circuit-board-bg-portrait z-0"></div>
+            <div class="flex items-center space-x-3 px-5 pt-5 relative z-10">
+                <img data-id="bank-logo" src="" alt="Bank" class="h-6 object-contain" />
+                <span data-id="bank-name" class="font-semibold text-sm truncate"></span>
+            </div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-10">
+                <h1 data-id="card-name" class="teko text-white text-2xl font-bold"></h1>
+                <p data-id="card-expiry" class="text-white text-sm opacity-80 tracking-widest"></p>
+            </div>
+            <div data-id="card-number" class="absolute bottom-5 left-5 text-[11px] font-bold tracking-wider z-10"></div>
+            <div class="absolute bottom-5 right-5 z-10">
+                <img data-id="provider-logo" src="" alt="Provider" class="h-5 object-contain" />
+            </div>
+        </div>`
+    }
+  };
+
+  // --- DOM ELEMENTS ---
+  const cardDisplayArea = document.getElementById('card-display-area');
+  const nameInput = document.getElementById('name-input');
+  const numberInput = document.getElementById('number-input');
+  const expiryInput = document.getElementById('expiry-input');
+  const bankSelect = document.getElementById('bank-select');
+  const styleSelect = document.getElementById('style-select');
+  const downloadBtn = document.getElementById('download-btn');
+  const allControls = [nameInput, numberInput, expiryInput, bankSelect, styleSelect, ...document.querySelectorAll('input[name="provider"]'), ...document.querySelectorAll('input[name="orientation"]')];
+
+  // --- FUNCTIONS ---
+  function updateCard() {
+    // 1. Get current selections from controls
+    const style = styleSelect.value;
+    const orientation = document.querySelector('input[name="orientation"]:checked').value;
+    const bank = bankSelect.value;
+    const provider = document.querySelector('input[name="provider"]:checked').value;
+
+    // 2. Inject the correct HTML template into the display area
+    const template = cardTemplates[style][orientation];
+    cardDisplayArea.innerHTML = template;
+
+    // 3. Get references to the *newly created* elements inside the card
+    const cardNameEl = cardDisplayArea.querySelector('[data-id="card-name"]');
+    const cardExpiryEl = cardDisplayArea.querySelector('[data-id="card-expiry"]');
+    const cardNumberEl = cardDisplayArea.querySelector('[data-id="card-number"]');
+    const bankLogoEl = cardDisplayArea.querySelector('[data-id="bank-logo"]');
+    const bankNameEl = cardDisplayArea.querySelector('[data-id="bank-name"]');
+    const providerLogoEl = cardDisplayArea.querySelector('[data-id="provider-logo"]');
+
+    // 4. Fill the elements with data
+    cardNameEl.textContent = nameInput.value.toUpperCase() || 'EV SANJEEVAN';
+    cardExpiryEl.textContent = expiryInput.value || '12/29';
+    cardNumberEl.textContent = '•• ' + (numberInput.value.split(' ').pop() || '8000');
+    
+    bankLogoEl.src = bankData[bank].logo;
+    bankNameEl.textContent = bankData[bank].name;
+    
+    providerLogoEl.src = providerData[provider];
+  }
+  
+  // Function to convert image URL to Data URL to fix CORS issue
+  async function toDataURL(url) {
+    // Using a more reliable CORS proxy
+    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+    try {
+        const response = await fetch(proxyUrl);
+        if (!response.ok) throw new Error(`Proxy failed: ${response.statusText}`);
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    } catch (error) {
+        console.error("Could not convert image to Data URL via proxy:", error);
+        alert("Error fetching image data. The download might fail.");
+        return url; // Fallback
+    }
+  }
+
+  async function downloadCardImage() {
+    const cardElement = cardDisplayArea.firstElementChild;
+    if (!cardElement) return;
+
+    const images = Array.from(cardElement.querySelectorAll('img'));
+    const originalSrcs = images.map(img => img.src); 
+
+    try {
+        await Promise.all(images.map(async (img) => {
+            const dataUrl = await toDataURL(img.src);
+            img.src = dataUrl;
+        }));
+
+        const canvas = await html2canvas(cardElement, {
+            backgroundColor: null,
+            logging: false,
+        });
+
+        const link = document.createElement('a');
+        link.download = 'generated-credit-card.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+
+    } catch (error) {
+        console.error("Download failed:", error);
+        alert("Sorry, there was a problem downloading the image.");
+    } finally {
+        // Restore original image sources after download attempt
+        images.forEach((img, index) => {
+            img.src = originalSrcs[index];
+        });
+    }
+  }
+
+  // --- EVENT LISTENERS ---
+  allControls.forEach(input => {
+    input.addEventListener('input', updateCard);
+    input.addEventListener('change', updateCard);
+  });
+  
+  downloadBtn.addEventListener('click', downloadCardImage);
+  
+  // Auto-format card number
+  numberInput.addEventListener('input', (e) => {
+    const value = e.target.value.replace(/\D/g, '').match(/.{1,4}/g);
+    e.target.value = value ? value.join(' ') : '';
+  });
+  
+  // Auto-format expiry date
+  expiryInput.addEventListener('input', (e) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 2) {
+      value = value.substring(0, 2) + '/' + value.substring(2, 4);
+    }
+    e.target.value = value;
+  });
+
+  // --- INITIAL CALL ---
+  updateCard();
+</script>
+
+</body>
+</html>
