@@ -7,6 +7,8 @@
   <!-- html2canvas library for downloading the image -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Teko:wght@700&display=swap" rel="stylesheet">
+  <!-- NEW: Bootstrap Icons CDN Link -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <style>
     /* Global Styles */
     body {
@@ -16,14 +18,38 @@
     .teko { font-family: 'Teko', sans-serif; }
 
     /* --- All Card Background Styles --- */
-    /* Style 1: Aurora */
+    /* Style 1: Aurora (UPDATED to use radial-gradient for compatibility with html2canvas) */
     .aurora-bg {
       background-color: #111;
       position: relative;
     }
-    .aurora-bg .blob1 { position: absolute; top: -4rem; left: -4rem; width: 12rem; height: 12rem; background-color: #581c87; border-radius: 9999px; filter: blur(60px); opacity: 0.4; z-index: 0; }
-    .aurora-bg .blob2 { position: absolute; bottom: -5rem; right: -2.5rem; width: 10rem; height: 10rem; background-color: #1d4ed8; border-radius: 9999px; filter: blur(60px); opacity: 0.5; z-index: 0; }
-    .aurora-bg .blob3 { position: absolute; bottom: -2rem; left: -1rem; width: 7rem; height: 7rem; background-color: #9f1239; border-radius: 9999px; filter: blur(48px); opacity: 0.3; z-index: 0; }
+    .aurora-bg .blob1 { 
+        position: absolute; 
+        top: -4rem; 
+        left: -4rem; 
+        width: 12rem; 
+        height: 12rem;
+        background: radial-gradient(circle, rgba(88, 28, 135, 0.5) 0%, transparent 70%);
+        z-index: 0; 
+    }
+    .aurora-bg .blob2 { 
+        position: absolute; 
+        bottom: -5rem; 
+        right: -2.5rem; 
+        width: 10rem; 
+        height: 10rem; 
+        background: radial-gradient(circle, rgba(29, 78, 216, 0.6) 0%, transparent 70%);
+        z-index: 0; 
+    }
+    .aurora-bg .blob3 { 
+        position: absolute; 
+        bottom: -2rem; 
+        left: -1rem; 
+        width: 7rem; 
+        height: 7rem;
+        background: radial-gradient(circle, rgba(159, 18, 57, 0.4) 0%, transparent 70%);
+        z-index: 0; 
+    }
 
     /* Style 2: Geometric Shards */
     .geometric-shards-bg-landscape {
@@ -118,10 +144,8 @@
 
     <!-- Permanent Warning Box -->
     <div class="max-w-4xl mx-auto mt-8 p-4 bg-yellow-900/20 border border-yellow-700/50 rounded-lg flex items-center space-x-4">
-        <!-- SVG Warning Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-yellow-400 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.03-1.742 3.03H4.42c-1.532 0-2.492-1.696-1.742-3.03l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-        </svg>
+        <!-- UPDATED: Bootstrap Icon replaces SVG -->
+        <i class="bi bi-exclamation-triangle text-4xl text-yellow-400 flex-shrink-0"></i>
         <div>
             <h3 class="font-bold text-yellow-200">Warning</h3>
             <p class="text-sm text-yellow-300/90 mt-1">
@@ -247,17 +271,14 @@
 
   // --- FUNCTIONS ---
   function updateCard() {
-    // 1. Get current selections from controls
     const style = styleSelect.value;
     const orientation = document.querySelector('input[name="orientation"]:checked').value;
     const bank = bankSelect.value;
     const provider = document.querySelector('input[name="provider"]:checked').value;
 
-    // 2. Inject the correct HTML template into the display area
     const template = cardTemplates[style][orientation];
     cardDisplayArea.innerHTML = template;
 
-    // 3. Get references to the *newly created* elements inside the card
     const cardNameEl = cardDisplayArea.querySelector('[data-id="card-name"]');
     const cardExpiryEl = cardDisplayArea.querySelector('[data-id="card-expiry"]');
     const cardNumberEl = cardDisplayArea.querySelector('[data-id="card-number"]');
@@ -265,7 +286,6 @@
     const bankNameEl = cardDisplayArea.querySelector('[data-id="bank-name"]');
     const providerLogoEl = cardDisplayArea.querySelector('[data-id="provider-logo"]');
 
-    // 4. Fill the elements with data
     cardNameEl.textContent = nameInput.value.toUpperCase() || 'EV SANJEEVAN';
     cardExpiryEl.textContent = expiryInput.value || '12/29';
     cardNumberEl.textContent = '•• ' + (numberInput.value.split(' ').pop() || '8000');
@@ -276,9 +296,7 @@
     providerLogoEl.src = providerData[provider];
   }
   
-  // Function to convert image URL to Data URL to fix CORS issue
   async function toDataURL(url) {
-    // Using a more reliable CORS proxy
     const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
     try {
         const response = await fetch(proxyUrl);
@@ -292,8 +310,8 @@
         });
     } catch (error) {
         console.error("Could not convert image to Data URL via proxy:", error);
-        alert("Error fetching image data. The download might fail.");
-        return url; // Fallback
+        alert("Error fetching image data. Download might fail.");
+        return url;
     }
   }
 
@@ -324,7 +342,6 @@
         console.error("Download failed:", error);
         alert("Sorry, there was a problem downloading the image.");
     } finally {
-        // Restore original image sources after download attempt
         images.forEach((img, index) => {
             img.src = originalSrcs[index];
         });
@@ -339,13 +356,11 @@
   
   downloadBtn.addEventListener('click', downloadCardImage);
   
-  // Auto-format card number
   numberInput.addEventListener('input', (e) => {
     const value = e.target.value.replace(/\D/g, '').match(/.{1,4}/g);
     e.target.value = value ? value.join(' ') : '';
   });
   
-  // Auto-format expiry date
   expiryInput.addEventListener('input', (e) => {
     let value = e.target.value.replace(/\D/g, '');
     if (value.length > 2) {
